@@ -22,3 +22,34 @@ datasource db {
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
  }
+
+  model Book{
+    @@map("books")
+     id Int @id @default(autoincrement())
+     title String
+     author String
+     publisher String
+     published_date DateTime
+     total_copies  Int
+     available_copies Int @default(1)
+     category String
+     ISBN Int @unique
+     created_at DateTime @default(now())
+     updated_at DateTime @default(now())
+ 
+  }
+
+  model Member{
+    @@map("members")
+
+    id Int @id @default(autoincrement())
+     name String
+     phone String @unique @db.VarChar(15)
+     email String @unique @db.VarChar(191)
+     address String
+     registered_date DateTime
+     created_at DateTime @default(now())
+     updated_at DateTime @default(now())
+  
+  }
+
