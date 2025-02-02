@@ -12,6 +12,11 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum TransactionType {
+  Borrow
+  Return
+} 
  model User{
   @@map("users")
   id Int  @id  @default(autoincrement())
@@ -21,6 +26,8 @@ datasource db {
   phone String @unique @db.VarChar(15)
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
+
+  members Member[]
  }
 
   model Book{
@@ -36,20 +43,39 @@ datasource db {
      ISBN Int @unique
      created_at DateTime @default(now())
      updated_at DateTime @default(now())
+     transactions Transaction[]
  
   }
 
-  model Member{
+  model Member {
     @@map("members")
 
     id Int @id @default(autoincrement())
+    user_id Int
      name String
-     phone String @unique @db.VarChar(15)
-     email String @unique @db.VarChar(191)
+     phone String @db.VarChar(15)
+     email String  @db.VarChar(191)
      address String
      registered_date DateTime
      created_at DateTime @default(now())
      updated_at DateTime @default(now())
+
+     user User @relation(fields: [user_id],references: [id], onDelete: Cascade)
+     transactions Transaction[]
   
   }
 
+model Transaction {
+  @@map("transactions")
+id Int @id @default(autoincrement())
+deadline Int
+member_id Int 
+book_id Int
+transaction_type TransactionType
+created_at DateTime @default(now())
+updated_at DateTime @default(now())
+
+member Member @relation(fields: [member_id],references: [id])
+book Book @relation(fields: [book_id], references: [id])
+
+}
